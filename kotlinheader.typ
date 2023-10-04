@@ -31,7 +31,7 @@
 
 #let comment(body) = rect(
   width: 100%,
-  fill: rgb("#94d37e"),
+  fill: rgb("#a4ffbe"),
   stroke: (paint: black, thickness: 1pt),
   radius: 10pt,
   inset: 7%,
@@ -52,22 +52,22 @@
 
 //////////// Code sample blocks
 
-#let kt(code) = raw(code.text, lang: "kt")
+#let kt(code) = text(fill: rgb("#0033b3"),raw(code.text))
 
 #let kt-eval(code) = [
-  #indent(raw(code.text, lang: "kt"))
+  #indent(text(fill: rgb("#0033b3"),raw(code.text)))
 ]
 #let kt-eval-noret(code) = [
-  #indent(raw(code.text, lang: "kt"))
+  #indent(text(fill: rgb("#0033b3"),raw(code.text)))
 ]
 #let kt-eval-append(code) = [
-  #indent(raw(code.text, lang: "kt"))
+  #indent(text(fill: rgb("#0033b3"),raw(code.text)))
 ]
 #let kt-res(code, type) = [
-  #indent(raw("=> : " + type.text + " = " + code.text, lang: "kt"))
+  #indent(raw("=> : " + type.text + " = " + code.text))
 ]
 #let kt-print(code) = [
-  #indent(text(fill: rgb("#54b33e"), raw(code.text)))
+  #indent(text(fill: rgb("#017C01"), raw(code.text)))
 ]
 #let kt-comp-err(err) = [
   #indent(text(fill: rgb("#FA3232"), raw(err.text)))
@@ -97,13 +97,13 @@
 } else if (typ == KtLong) {
   text(fill: rgb("#1750eb"), join-raw(lit))
 } else if (typ == KtChar) {
-  text(fill: rgb("#54b33e"), join-raw(lit))
+  text(fill: rgb("#017C01"), join-raw(lit))
 } else if (typ == KtString) {
-  text(fill: rgb("#54b33e"), join-raw(lit))
+  text(fill: rgb("#017C01"), join-raw(lit))
 } else if (typ == KtDouble) {
-  text(fill: rgb("#000000"), join-raw(lit))
+  text(fill: rgb("#1750eb"), join-raw(lit))
 } else if (typ == KtBool) {
-  text(fill: rgb("#ed864a"), join-raw(lit))
+  text(fill: rgb("#0033b3"), join-raw(lit))
 } else [
   UNKNOWN LITERAL TYPE
 ]
@@ -131,6 +131,8 @@
   #show regex("\bString\b") : datatype("String")
   #show regex("\bUnit\?") : datatype("Unit?")
   #show regex("\bUnit\b") : datatype("Unit")
+  #show regex("\bNumber\?") : datatype("Number?")
+  #show regex("\bNumber\b") : datatype("Number")
   //
   #show regex("\bprint\b") : static-function("print")
   #show regex("\bprintln\b") : static-function("println")

@@ -63,8 +63,8 @@
 
 #kt-par[
   Без неожиданных спецэффектов. Автоприведения типов здесь нет, так что
-  #raw("\"22\" - \"2\" = 20"),
-  как в JS, не получится. С символами, впрочем, операции производить можно:
+  #raw("\"22\" - \"2\" = 20"), как в JS, не получится. С символами, впрочем,
+  операции производить можно:
 ]
 
 #kt-eval(``` 'c' - 'a' ```)
@@ -101,7 +101,7 @@ if (1 + 2 < 4) {
   что не завершится успешно. Если у предыдущего типа существует единственное
   значение, то у типа Nothing нет ни одного значения.
 
-  Так, погодите. Выходит, у нас `if...else` что-то возвращает? А можно, чтобы он
+  Так, погодите. Выходит, у нас if`...`else что-то возвращает? А можно, чтобы он
   возвращал содержательную информацию? Можно.
 ]
 
@@ -114,7 +114,7 @@ if (1 + 2 < 4) {
     239
 }
 ```)
-#kt-res(``` 566 ```, KtInt)
+#kt-res(`566`, KtInt)
 
 #kt-par[
   Последняя строчка интерпретируется как выражение --- то есть, что-то-таки
@@ -269,9 +269,10 @@ fun max(a: Int, b: Int): Int {
 ]
 
 #kt-eval(```
-    fun max(a: Int, b: Int): Int {
-        return if (a < b) b else a
-    }    ```)
+fun max(a: Int, b: Int): Int {
+    return if (a < b) b else a
+}
+```)
 
 #kt-par[
   Если тело функции состоит только из return-statement, то фигурные скобки и
@@ -279,8 +280,8 @@ fun max(a: Int, b: Int): Int {
 ]
 
 #kt-eval(```
-    fun max(a: Int, b: Int): Int = if (a < b) b else a
-    ```)
+fun max(a: Int, b: Int): Int = if (a < b) b else a
+```)
 
 #kt-par[
   Здесь уже можно опустить возвращаемый тип, ибо он очевиден компилятору, но лучше
@@ -304,8 +305,8 @@ fun max(a: Int, b: Int): Int {
   данных разные? Ошибка?]
 
 #kt-eval(```
-    if(1 < 2) 3 else "4"
-    ```)
+if(1 < 2) 3 else "4"
+```)
 #kt-res(`3`, Comparable(KtStar))
 
 #kt-par[
@@ -318,8 +319,8 @@ fun max(a: Int, b: Int): Int {
 ]
 
 #kt-eval(```
-    if(1 < 2) 3 else Unit
-    ```)
+if(1 < 2) 3 else Unit
+```)
 #kt-res(`3`, Any)
 
 #kt-par[
@@ -346,15 +347,15 @@ fun max(a: Int, b: Int): Int {
 
 #strikeleft[
   #kt-eval(```
-        var s : String = "abc"
-        s = null
-        ```)
+                        var s : String = "abc"
+                      s = null
+                      ```)
   #kt-comp-err(`Null can not be a value of a non-null type String`)
 
   #kt-eval(```
-        var s : String? = "abc"
-        s = null // OK
-        ```)
+                      var s : String? = "abc"
+                      s = null // OK
+                      ```)
 ]
 
 #kt-par[
@@ -378,19 +379,19 @@ fun max(a: Int, b: Int): Int {
   ]
 
   #kt-eval(```
-        val s : String? = "abacaba"
-        s!!
-        ```)
+                      val s : String? = "abacaba"
+                      s!!
+                      ```)
   #kt-res(`"abacaba"`, KtString)
 
   #kt-eval(```
-        val s : String? = null
-        s!!
-        ```)
+                      val s : String? = null
+                      s!!
+                      ```)
   #kt-runt-err(```
-        Exception in thread "main" java.lang.NullPointerException
-          at test.TestKts.main(Test.kts:2)
-        ```)
+                      Exception in thread "main" java.lang.NullPointerException
+                          at test.TestKts.main(Test.kts:2)
+                      ```)
 ]
 - Safe call
 #strikeleft[
@@ -399,15 +400,15 @@ fun max(a: Int, b: Int): Int {
   ]
 
   #kt-eval(```
-        val s : String? = "abacaba"
-        s?.substring(2, 6)
-        ```)
+                      val s : String? = "abacaba"
+                      s?.substring(2, 6)
+                      ```)
   #kt-res(`"acab"`, `String?`)
 
   #kt-eval(```
-        val s : String? = null
-        s?.substring(2, 6)
-        ```)
+                      val s : String? = null
+                      s?.substring(2, 6)
+                      ```)
   #kt-res(`null`, `String?`)
 ]
 
@@ -419,15 +420,15 @@ fun max(a: Int, b: Int): Int {
   ]
 
   #kt-eval(```
-          val s : String? = "abacaba"
-          s ?: "by default"
-          ```)
+                      val s : String? = "abacaba"
+                      s ?: "by default"
+                      ```)
   #kt-res(`"abacaba"`, `String`)
 
   #kt-eval(```
-          val s : String? = null
-          s ?: "by default"
-          ```)
+                      val s : String? = null
+                      s ?: "by default"
+                      ```)
   #kt-res(`"by default"`, `String`)
 ]
 #kt-par[
@@ -444,3 +445,257 @@ fun max(a: Int, b: Int): Int {
   положить в `U?`). И логично, чтобы null приводился к любому nullable типу.
   Nothing приводится к любому `T`, значит, Nothing? приводится к любому `T?`.
 ]
+
+#kt-par[
+  Осталось поговорить про массивы. А их здесь несколько разных бывает.
+]
+
+#kt-eval(```
+arrayOf("abc", "def", "ghi")
+```)
+#kt-res(`[Ljava.lang.String;@3b9a45b3`, `Array<String>`)
+
+Будьте здоровы, Вы, кажется, чихнули. Да, нормального встроенного строкового
+представления для массивов не подвезли, выводится некая системная информация.
+Для этого придётся вызвать специальную функцию `joinToString` (на самом деле она
+гораздо мощнее, но об этом мы поговорим позже).
+
+#kt-eval(```
+arrayOf("abc", "def", "ghi").joinToString()
+```)
+#kt-res(`"abc, def, ghi"`, `String`)
+
+Тем не менее, с массивами можно работать, как в любом другом языке.
+
+#kt-eval(```
+val arr = arrayOf("abc", "def", "ghi")
+arr[1]
+```)
+#kt-res(`"def"`, `String`)
+(Да, индексация с нуля)
+#kt-eval-append(```
+arr[0] = "magic"
+arr.joinToString()
+```)
+#kt-res(`"magic, def, ghi"`, `String`)
+
+#kt-par[
+  Массивы типизированы: за это, собственно, отвечает String в треугольных скобках
+  после `Array<`String`>` (как это работает, опять-таки --- позже, сейчас
+  пользуемся как магией). То есть, нельзя просто так взять и положить Int в массив
+  строк:
+]
+
+#kt-eval-append(```
+arr[0] = 1
+```)
+#kt-comp-err(`The integer literal does not conform to the expected type String`)
+
+Также, если попытаться обратиться за границу массива, получаем ошибку:
+
+#kt-eval-append(```
+arr[3]
+```)
+#kt-runt-err(
+  ```
+            Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 3 out of bounds for length 3
+                at TestsKts.main(Tests.kts:6)
+              ```,
+)
+
+Можно создавать и массивы более общих типов. Например,
+
+#kt-eval(```
+arrayOf(1, "2", null)
+```)
+#kt-res(`[Ljava.lang.Object;@3b9a45b3`, `Array<Comparable<*>?>`)
+
+#kt-par[
+  Как мы помним, у Int и String есть нечто общее --- они оба `Comparable<*>`. А у
+  `Comparable<*>` и null общим типом будет, очевидно, `Comparable<*>?`.
+
+  Можно также задать тип вручную:
+]
+
+#kt-eval(```
+arrayOf<Number>(1, 2, 3)
+```)
+#kt-res(`[Ljava.lang.Number;@3b9a45b3`, `Array<Number>`)
+
+#kt-par[
+  Number --- это обобщение Int, Long, Double и так далее. В `Array<`Number`>` мы
+  можем положить любые числа. И когда мы что-то достаем из массива Number, мы не
+  можем точно быть уверены, какое конкретно это число. Мы можем выполнять общие
+  операции, определённые для всех чисел, например, привести к типу Double:
+]
+
+#kt-eval(```
+val arr = arrayOf<Number>(1, 2, 3)
+arr[1].toDouble()
+```)
+#kt-res(`2.0`, KtDouble)
+
+Или проверить, какого оно типа:
+#kt-eval-append(```
+arr[1] is Long
+```)
+#kt-res(`false`, KtBool)
+#kt-eval-append(```
+arr[1] is Int
+```)
+#kt-res(`true`, KtBool)
+После этого, если мы уверены, привести явным образом
+#kt-eval-append(```
+arr[1] as Int
+```)
+#kt-res(`2`, KtInt)
+Стоит заметить, во-первых, что попытка каста к не тому типу обернётся ошибкой
+времени исполнения:
+#kt-eval-append(```
+arr[1] as Double
+```)
+#kt-runt-err(
+  `
+        Exception in thread "main" java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Double (java.lang.Integer and java.lang.Double are in module java.base of loader 'bootstrap')
+          at TestsKts.main(Tests.kts:6)
+        `,
+)
+А попытка проверить на is что-то совершенно точно бессмысленное --- ошибкой
+компиляции:
+#kt-eval-append(```
+arr[1] is String
+```)
+#kt-comp-err(`
+Incompatible types: String and Number
+`)
+#kt-par[
+  Так как компилятор считает правильным сообщить вам, что Number совершенно точно
+  никогда строкой не окажется.
+]
+
+Так, давайте вернёмся к массивам. Можно ли создавать массивы массивов? Сколько
+угодно:
+#kt-eval(```
+arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
+```)
+#kt-res(`[[Ljava.lang.String;@3b9a45b3`, `Array<Array<String>>`)
+Будьте здоровы.
+#kt-eval(```
+arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl")).joinToString()
+```)
+#kt-res(`"[Ljava.lang.String;@6d03e736, [Ljava.lang.String;@568db2f2"
+`, `String`)
+Будьте здоровы!
+
+#comment[
+  Ладно, здесь, конечно, можно пытаться добиться адекватности:
+  #kt-eval(```
+      val matrix = arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
+      matrix.joinToString(transform = Array<String>::joinToString)
+      ```)
+  #kt-res(`abc, def, ghi, jkl`, `String`)
+  Это ещё куда ни шло, но совершенно непонятно, где кончаются границы одного и
+  другого массива внутри.
+  #kt-eval(```
+      val matrix = arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
+      matrix.joinToString(", ", "[", "]") { it.joinToString (", ", "[", "]") }
+      ```)
+  #kt-res(`[[abc, def], [ghi, jkl]]`, `String`)
+  Есть, конечно, возможность заставить это работать. Но... вам не надоело?
+]
+
+Есть несколько причин, почему в котлине непосредственно массивы используются
+крайне редко. Во-первых, вышеупомянутые проблемы со строковым представлением.
+Во-вторых, и это более важно, проблемы с безопасностью. Допустим, вы передали
+куда-то в функцию массив.
+
+#kt-eval(```
+fun blackBox(data: Array<String>) {
+    data[2] = "flowers"
+}
+
+val array = arrayOf("Some", "important", "data", "here")
+blackBox(array)
+array.joinToString()
+```)
+#kt-res(`"Some, important, flowers, here"`, `String`)
+
+#indent[Полундра! Данные скомпрометированы!]
+
+Проблема в том, что массивы передаются исключительно по ссылке, копирования при
+передаче не происходит. А значит, отдавая кому-то на сторону данные, вы не
+можете быть уверены в их сохранности --- фактически вы отдаёте ссылку на область
+в памяти, где эти данные лежат.
+
+Чтобы этого избежать, существуют листы:
+#kt-eval(```
+listOf("Some", "important", "data", "here")
+```)
+#kt-res(`[Some, important, data, here]`, `List<String>`)
+
+И строковое представление нормальное, и записать туда что-то нам не дадут:
+#kt-eval(```
+val arr = listOf("Some", "important", "data", "here")
+arr[2] = "flowers"
+```)
+#kt-comp-err(
+  ```
+  Unresolved reference. None of the following candidates is applicable because of receiver type mismatch:
+  public inline operator fun kotlin.text.StringBuilder /* = java.lang.StringBuilder */.set(index: Int, value: Char): Unit defined in kotlin.text
+  No set method providing array access
+  ```,
+)
+... очень много информации. Компилятор попытался найти метод с именем `set`,
+который отвечал бы за подобное присваивание, и не справился. Содержательная
+часть здесь `No set method providing array access` --- записывать сюда нам не
+дадут.
+
+Листы и массивы можно превращать друг в друга:
+#kt-eval(```
+val arr = arrayOf("Some", "important", "data", "here")
+arr.toList()
+```)
+#kt-res(`[Some, important, data, here]`, `List<String>`)
+#kt-eval(```
+val arr = listOf("Some", "important", "data", "here")
+arr.toTypedArray()
+```)
+#kt-res(`[Ljava.lang.String;@4fca772d`, `Array<String>`)
+И в том, и в другом случае действительно происходит копирование.
+
+Кстати, говорилось про три варианта? Да, есть ещё `MutableList`. 
+
+#kt-eval(`
+mutableListOf(1, 2, 3)
+`)
+#kt-res(`[1, 2, 3]`, `MutableList<Int>`)
+В него, как и в массив, можно записывать, из него можно читать, но, что особенно важно, можно его расширять (массивы имеют постоянную длину!):
+#kt-eval(```
+val arr = mutableListOf(1, 2, 3)
+arr.add(566)
+arr
+```)
+#kt-res(`[1, 2, 3, 566]`, `MutableList<Int>`)
+Так вот, `MutableList<T>` в частности, является `List<T>` для любого типа `T`, так как `MutableList<T>` предоставляет те же методы: чтение, проверка длины, некоторые другие; но предоставляет и дополнительные --- изменение, расширение. Так что можно передать `MutableList<T>` в функцию, которая требует `List<T>` и (почти) не бояться, что его изменят. 
+#comment[
+Почти --- потому что некоторая возможность всё же есть; если вдруг это данные для запуска ядерных ракет и вы передаёте их в функцию --- лучше всё-таки сделайте копию.
+]
+Ну, было бы желание сломать --- сломать получится. Например, до Java версии 1.8 включительно можно было провернуть очень интересный фокус, следите за руками:
+
+#kt-eval(`1 as Any`)
+#kt-res(`1`, Any)
+Всё, казалось бы, логично, от того, что мы привели к более общему типу, значение-то не поменялось. Да?
+
+#kt(```
+val rnd = Random(56630239)
+val clazz = Class.forName("java.lang.Integer\$IntegerCache")
+val field = clazz.getDeclaredField("cache")
+field.isAccessible = true
+val cache = field.get(null) as Array<Int>
+for (i in 0 until cache.size) cache[i] = rnd.nextInt(cache.size)
+```)
+
+А вот после этого замечательного кода попробуем снова
+#kt-eval(`1 as Any`)
+#kt-res(`146`, Any)
+Э-э-э... Упс?
