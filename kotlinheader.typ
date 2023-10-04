@@ -48,6 +48,9 @@
 #let kt-comp-err(err) = [
   #text(fill: rgb("#FA3232"), raw(err.text)) \
 ]
+#let kt-runt-err(err) = [
+  #text(fill: rgb("#FA3232"), raw(err.text)) \
+]
 
 #let kt-fmt(code) = [
   #raw(code.text, lang: "kt")
@@ -68,4 +71,54 @@
 
   #show regex("(until|rangeTo|downTo)") : kt-ext-fun
   #rest
+]
+
+#let comment(body) = rect(
+  width: 100%,
+  fill: white,
+  stroke: (paint: black, thickness: 3pt),
+  radius: 10pt,
+  inset: 7%,
+  outset: -3%,
+  [\ #body\ \ ],
+)
+
+#let datatype(text) = join-raw(text)
+#let static-function(text) = join-raw(text)
+#let ext-function(text) = join-raw(text)
+#let kt-keyword(txt) = text(fill: rgb("#ed864a"), join-raw(txt))
+
+#let kt-par(body) = [
+  #show "Nothing?" : datatype("Nothing?")
+  #show "Nothing" : datatype("Nothing")
+  #show "Int?" : datatype("Int?")
+  #show "Int" : datatype("Int")
+  #show "Long?" : datatype("Long?")
+  #show "Long" : datatype("Long")
+  #show "Short?" : datatype("Short?")
+  #show "Short" : datatype("Short")
+  #show "Byte?" : datatype("Byte?")
+  #show "Byte" : datatype("Byte")
+  #show "Char?" : datatype("Char?")
+  #show "Char" : datatype("Char")
+  #show "Float?" : datatype("Float?")
+  #show "Float" : datatype("Float")
+  #show "Double?" : datatype("Double?")
+  #show "Double" : datatype("Double")
+  #show "Any?" : datatype("Any?")
+  #show "Any" : datatype("Any")
+  #show "String?" : datatype("String?")
+  #show "String" : datatype("String")
+  #show "Unit?" : datatype("Unit?")
+  #show "Unit" : datatype("Unit")
+
+  #show "print" : static-function("print")
+  #show "println" : static-function("println")
+
+  #show "val" : kt-keyword("val")
+  #show "var" : kt-keyword("var")
+  #show "do" : kt-keyword("do")
+  #show "while" : kt-keyword("while")
+
+  #body
 ]
