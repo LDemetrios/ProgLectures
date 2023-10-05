@@ -1,18 +1,19 @@
 #import "kotlinheader.typ" : *
-#import "tablex.typ": tablex, rowspanx, colspanx, hlinex, vlinex
 
-#set par(justify: true)
+#show : kt-paper-rule
 
-#let func = ["he-he"]
+= Основы языка Kotlin
 
-// TODO : show rule for JVM, JS, Kotlin, Java, C++ icon
+#kt-par[
+  Будем пользоваться нотацией REPL: после `=>` описывается тип результата, затем
+  строковое представление результата. Если код что-то выводит, то это написано
+  после результата.
+]
 
-Будем пользоваться нотацией REPL: после `=>` описывается тип результата, затем
-строковое представление результата. Если код что-то выводит, то это написано
-после результата.
-
-Итак, Котлин. Давайте для начала разберёмся с местными примитивными
-конструкциями. У нас есть следующие типы данных:
+#kt-par[
+  Итак, Котлин. Давайте для начала разберёмся с местными примитивными
+  конструкциями. У нас есть следующие типы данных:
+]
 
 #let prim(code, repr: none, typ) = {
   indent(kt-literal(code.text, typ))
@@ -42,12 +43,16 @@
   Byte (8-битное целое), Short (16-битное целое) и Float (single-precision
   вещественное), но их используют крайне редко (поскольку всё меньше остаётся даже
   32-битных процессоров).
+]
 
+#kt-par[
   Зато, для желающих, есть _довольно быстрая_ реализация `unsigned` целых чисел:
   `UInt`, `ULong` etc.
 ]
 
-С этими типами можно делать довольно ожидаемые действия:
+#kt-par[
+  С этими типами можно делать довольно ожидаемые действия:
+]
 
 - Складывать:
 #kt-eval(``` 0.1 + 0.2 ```)
@@ -63,21 +68,25 @@
 
 #kt-par[
   Без неожиданных спецэффектов. Автоприведения типов здесь нет, так что
-  #raw("\"22\" - \"2\" = 20"), как в JS, не получится. С символами, впрочем,
+  #box(raw("\"22\" - \"2\" = 20")), как в JS, не получится. С символами, впрочем,
   операции производить можно:
 ]
 
 #kt-eval(``` 'c' - 'a' ```)
 #kt-res(`2`, KtInt)
 
-Также в наличии логические операции
+#kt-par[
+  Также в наличии логические операции
+]
 
 #kt-eval(``` !false ```)
 #kt-res(`true`, KtBool)
 #kt-eval(``` true && false ```)
 #kt-res(`false`, KtBool)
 
-Ну и так далее. Разберётесь по ходу ведения.
+#kt-par[
+  Ну и так далее. Разберётесь по ходу ведения.
+]
 
 Ветвление:
 #kt-eval(```
@@ -100,7 +109,9 @@ if (1 + 2 < 4) {
   Второй --- Nothing --- означает, что функция никогда ничего не вернёт, потому
   что не завершится успешно. Если у предыдущего типа существует единственное
   значение, то у типа Nothing нет ни одного значения.
+]
 
+#kt-par[
   Так, погодите. Выходит, у нас if`...`else что-то возвращает? А можно, чтобы он
   возвращал содержательную информацию? Можно.
 ]
@@ -123,27 +134,33 @@ if (1 + 2 < 4) {
   фигурные скобки можно и не ставить.\
 ]
 
-#kt-eval(``` if(1 + 2 < 4) 566 else 239 ```)
+#kt-eval(``` if (1 + 2 < 4) 566 else 239 ```)
 #kt-res(``` 566 ```, KtInt)
 
-Теперь циклы. А для циклов сначала нужны переменные. Их есть:
+#nobreak[
+  Теперь циклы. А для циклов сначала нужны переменные. Их есть:
 
-#kt-eval(```
-var i = 0
-while (i < 5) {
-    print(i)
-    i++
-}
-```)
-#kt-print(``` 01234 ```)
+  #kt-eval(```
+        var i = 0
+        while (i < 5) {
+            print(i)
+            i++
+        }
+        ```)
+  #kt-print(``` 01234 ```)
+]
 
 #kt-par[
   Во-первых, print --- это как println, только без перевода строки. Во-вторых,
   погодите, а результат? Мы думали, и в магазине можно стеночку приподнять?
+]
 
+#kt-par[
   А нет. Цикл не является выражением, он не возвращает даже Unit. Как, впрочем, и
   объявление переменной.
+]
 
+#kt-par[
   В-третьих, переменные в Котлине имеют тип. То есть, если у вас про переменную
   заявлено, что там лежат числа, вы не можете положить туда строку:
 ]
@@ -158,7 +175,9 @@ a = "2"
 #kt-par[
   А если вы не заявляли тип явно, то компилятор сам выведет наиболее узкий,
   который сможет.
+]
 
+#kt-par[
   Кроме переменных, конечно, есть постоянные:
 ]
 
@@ -170,7 +189,9 @@ a = 1
 
 #kt-par[
   Если вы можете использовать val, используйте val, а не var.
+]
 
+#kt-par[
   Есть также циклы do-while:
 ]
 
@@ -185,7 +206,9 @@ do {
   Переменная, объявленная внутри цикла, в общем случае снаружи не видна, а вот в
   случае конкретно do-while видна в условии, что приятно. Кажется, так было не
   всегда.
+]
 
+#kt-par[
   ... и циклы for:
 ]
 
@@ -205,32 +228,39 @@ for (i in 0 until 5) {
   могут быть ещё аргументы, например, #kt(`566.toString(3)`), чтобы преобразовать
   в троичную систему счисления. Все инфиксные функции можно вызывать также и в
   условно-постфиксной записи: #kt(`0.until(5)`), но не наоборот.
-
-  Помимо until есть ещё downTo и rangeTo:
 ]
 
-#table(
-  columns: (auto, auto, auto, auto),
-  rows: 2em,
-  align: center + horizon,
-  [until],
-  kt(`0 until 5`),
-  kt(`0.until(5)`),
-  `[0, 1, 2, 3, 4]`,
-  [rangeTo],
-  kt(`0..5`),
-  kt(`0.rangeTo(5)`),
-  `[0, 1, 2, 3, 4, 5]`,
-  [downTo],
-  kt(`5 downTo 0`),
-  kt(`5.downTo(0)`),
-  `[5, 4, 3, 2, 1, 0]`,
-)
+#nobreak[
+  #kt-par[
+    Помимо until есть ещё downTo и rangeTo:
+  ]
+
+  #table(
+    columns: (auto, auto, auto, auto),
+    rows: 2em,
+    align: center + horizon,
+    [until],
+    kt(`0 until 5`),
+    kt(`0.until(5)`),
+    `[0, 1, 2, 3, 4]`,
+    [rangeTo],
+    kt(`0..5`),
+    kt(`0.rangeTo(5)`),
+    `[0, 1, 2, 3, 4, 5]`,
+    [downTo],
+    kt(`5 downTo 0`),
+    kt(`5.downTo(0)`),
+    `[5, 4, 3, 2, 1, 0]`,
+  )
+]
 
 #kt-par[
   В экспериментальных на момент написания конспекта версиях Котлина есть ещё
-  вариант #kt(`0..<5`) для until.
+  вариант #box(kt(`0..<5`)) для until (Точнее, строго говоря, будет вызван метод
+  `rangeUntil`, но делает он то же самое).
+]
 
+#kt-par[
   Как это работает? Э-хе-хе, подождите, давайте сначала научимся префиксные
   функции писать.
 ]
@@ -257,9 +287,13 @@ fun max(a: Int, b: Int): Int {
 }
 ```)
 
-Ну, здесь всё понятно.
+#kt-par[
+  Ну, здесь всё понятно.
+]
 
-Проверим, что работает:
+#kt-par[
+  Проверим, что работает:
+]
 
 #kt-eval(``` max(239, 566) ```)
 #kt-res(`566`, KtInt)
@@ -295,19 +329,20 @@ fun max(a: Int, b: Int): Int = if (a < b) b else a
   В некотором смысле, это выражение никогда ничего не возвращает. О, где-то такое
   уже было. На самом деле на уровне языка оно возвращает тип Nothing. Например,
   если мы напишем
+] #kt(`val x = return`) #kt-par[, то понятно, что до присвоения значения постоянной `x` дело так и не дойдёт. ]
+
+#kt-par[
+  Для понимания следующего сначала рассмотрим обобщающие типы. Так, если мы пишем
+] #kt(`if (condition) 1 else 2`) #kt-par[, то понятно, какой тип выведет компилятор --- Int.]
+
+#nobreak[
+  #kt-par[ А если типы возвращаемых данных разные? Ошибка? ]
+
+  #kt-eval(```
+      if (1 < 2) 3 else "4"
+      ```)
+  #kt-res(`3`, Comparable(KtStar))
 ]
-#kt(`val x = return`)
-#kt-par[, то понятно, что до присвоения значения постоянной `x` дело так и не дойдёт.
-
-  Для понимания следующего сначала рассмотрим обобщающие типы. Так, если мы пишем]
-#kt(`if(condition) 1 else 2`)
-#kt-par[, то понятно, какой тип выведет компилятор --- Int. А если типы возвращаемых
-  данных разные? Ошибка?]
-
-#kt-eval(```
-if(1 < 2) 3 else "4"
-```)
-#kt-res(`3`, Comparable(KtStar))
 
 #kt-par[
   А нет. Что-то мы всё же про это знаем, и числа, и строки можно сравнивать. А
@@ -319,7 +354,7 @@ if(1 < 2) 3 else "4"
 ]
 
 #kt-eval(```
-if(1 < 2) 3 else Unit
+if (1 < 2) 3 else Unit
 ```)
 #kt-res(`3`, Any)
 
@@ -330,15 +365,21 @@ if(1 < 2) 3 else Unit
   - посчитать хэшкод
   - сравнить на равенство с чем-то другим.
   В общем-то, всё.
+]
 
+#kt-par[
   Есть ещё значение null, которое не является Any, а о его типе поговорим чуть
   позже.
+]
 
+#kt-par[
   Так вот, всё, что не null --- является Any, и может быть приведён к типу Any. А
   тип Nothing --- наоборот, может быть приведён *_к_* любому типу. Потому что на
   самом деле никогда не понадобится приводить, потому что объектов типа Nothing не
   существует.
+]
 
+#kt-par[
   Значение null в Котлине несёт тот же смысл, что null в Java, nullptr в С++, None
   в Python и т.д. Это заглушка, возможность сказать, что здесь могло бы быть
   значение, но пока его нет. Но хранить их можно только в специальных nullable
@@ -347,52 +388,60 @@ if(1 < 2) 3 else Unit
 
 #strikeleft[
   #kt-eval(```
-                        var s : String = "abc"
-                      s = null
-                      ```)
+              var s : String = "abc"
+            s = null
+            ```)
   #kt-comp-err(`Null can not be a value of a non-null type String`)
 
   #kt-eval(```
-                      var s : String? = "abc"
-                      s = null // OK
-                      ```)
+              var s : String? = "abc"
+              s = null // OK
+              ```)
 ]
 
 #kt-par[
   В отличие от Java, nullable типами могут быть и примитивные (Int, Long etc.).
-  #comment[
+]
+
+#comment[
+  #kt-par[
     Впрочем, это довольно неэффективно, так как, в то время как Int, Char, и так
     далее транслируются в использование примитивов (int, char), nullable типы Int?,
     Char? --- в объектные Integer, Character и так далее, чтобы можно было
     присваивать им null. Это занимает больше места, больше времени и прочее.
     Аналогично происходит с lateinit var, которые под капотом nullable.
   ]
-  Поскольку NullPointerException --- одна из самых частых ошибок времени
-  исполнения в Java, в Kotlin добавили специальных операторов для работы с
-  nullable значениями:
 ]
-
-- Non-null assertion
-#strikeleft[
+#nobreak[
   #kt-par[
-    Если значение не null, то вернуть его, если null --- бросить ошибку.
+    Поскольку NullPointerException --- одна из самых частых ошибок времени
+    исполнения в Java, в Kotlin добавили специальных операторов для работы с
+    nullable значениями:
   ]
 
-  #kt-eval(```
-                      val s : String? = "abacaba"
-                      s!!
-                      ```)
-  #kt-res(`"abacaba"`, KtString)
+  - Non-null assertion
+  #strikeleft[
+    #kt-par[
+      Если значение не null, то вернуть его, если null --- бросить ошибку.
+    ]
 
-  #kt-eval(```
-                      val s : String? = null
-                      s!!
-                      ```)
-  #kt-runt-err(```
-                      Exception in thread "main" java.lang.NullPointerException
-                          at test.TestKts.main(Test.kts:2)
-                      ```)
+    #kt-eval(```
+                  val s : String? = "abacaba"
+                  s!!
+                  ```)
+    #kt-res(`"abacaba"`, KtString)
+
+    #kt-eval(```
+                  val s : String? = null
+                  s!!
+                  ```)
+    #kt-runt-err(```
+                    Exception in thread "main" java.lang.NullPointerException
+                        at test.TestKts.main(Test.kts:2)
+                    ```)
+  ]
 ]
+
 - Safe call
 #strikeleft[
   #kt-par[
@@ -400,16 +449,16 @@ if(1 < 2) 3 else Unit
   ]
 
   #kt-eval(```
-                      val s : String? = "abacaba"
-                      s?.substring(2, 6)
-                      ```)
-  #kt-res(`"acab"`, `String?`)
+              val s : String? = "abacaba"
+              s?.substring(2, 6)
+              ```)
+  #kt-res(`"acab"`, KtString7)
 
   #kt-eval(```
-                      val s : String? = null
-                      s?.substring(2, 6)
-                      ```)
-  #kt-res(`null`, `String?`)
+              val s : String? = null
+              s?.substring(2, 6)
+              ```)
+  #kt-res(`null`, KtString7)
 ]
 
 - Elvis operator
@@ -420,23 +469,24 @@ if(1 < 2) 3 else Unit
   ]
 
   #kt-eval(```
-                      val s : String? = "abacaba"
-                      s ?: "by default"
-                      ```)
-  #kt-res(`"abacaba"`, `String`)
+              val s : String? = "abacaba"
+              s ?: "by default"
+              ```)
+  #kt-res(`"abacaba"`, KtString7)
 
   #kt-eval(```
-                      val s : String? = null
-                      s ?: "by default"
-                      ```)
-  #kt-res(`"by default"`, `String`)
+                val s : String? = null
+                s ?: "by default"
+                ```)
+  #kt-res(`"by default"`, KtString)
 ]
+
 #kt-par[
   Какой тип имеет сам null?
 ]
 
 #kt-eval(`null`)
-#kt-res(`null`, `Nothing?`)
+#kt-res(`null`, KtNothing7)
 
 #kt-par[
   Почему так? Логично, что если тип `T` приводится к типу `U`, то тип `T?` должен
@@ -446,38 +496,46 @@ if(1 < 2) 3 else Unit
   Nothing приводится к любому `T`, значит, Nothing? приводится к любому `T?`.
 ]
 
-#kt-par[
-  Осталось поговорить про массивы. А их здесь несколько разных бывает.
+#nobreak[
+  #kt-par[
+    Осталось поговорить про массивы. А их здесь несколько разных бывает.
+  ]
+
+  #kt-eval(```
+      arrayOf("abc", "def", "ghi")
+      ```)
+  #kt-res(`[Ljava.lang.String;@3b9a45b3`, `Array<String>`)
+  #kt-par[
+    Будьте здоровы, Вы, кажется, чихнули.
+  ]
 ]
 
-#kt-eval(```
-arrayOf("abc", "def", "ghi")
-```)
-#kt-res(`[Ljava.lang.String;@3b9a45b3`, `Array<String>`)
-
-Будьте здоровы, Вы, кажется, чихнули. Да, нормального встроенного строкового
-представления для массивов не подвезли, выводится некая системная информация.
-Для этого придётся вызвать специальную функцию `joinToString` (на самом деле она
-гораздо мощнее, но об этом мы поговорим позже).
+#kt-par[Да, нормального встроенного строкового представления для массивов не подвезли,
+  выводится некая системная информация. Для этого придётся вызвать специальную
+  функцию `joinToString` (на самом деле она гораздо мощнее, но об этом мы
+  поговорим позже).]
 
 #kt-eval(```
 arrayOf("abc", "def", "ghi").joinToString()
 ```)
-#kt-res(`"abc, def, ghi"`, `String`)
-
-Тем не менее, с массивами можно работать, как в любом другом языке.
+#kt-res(`"abc, def, ghi"`, KtString)
+#kt-par[
+  Тем не менее, с массивами можно работать, как в любом другом языке.
+]
 
 #kt-eval(```
 val arr = arrayOf("abc", "def", "ghi")
 arr[1]
 ```)
-#kt-res(`"def"`, `String`)
-(Да, индексация с нуля)
+#kt-res(`"def"`, KtString)
+
+#kt-par[ (Да, индексация с нуля) ]
+
 #kt-eval-append(```
 arr[0] = "magic"
 arr.joinToString()
 ```)
-#kt-res(`"magic, def, ghi"`, `String`)
+#kt-res(`"magic, def, ghi"`, KtString)
 
 #kt-par[
   Массивы типизированы: за это, собственно, отвечает String в треугольных скобках
@@ -491,7 +549,9 @@ arr[0] = 1
 ```)
 #kt-comp-err(`The integer literal does not conform to the expected type String`)
 
-Также, если попытаться обратиться за границу массива, получаем ошибку:
+#kt-par[
+  Также, если попытаться обратиться за границу массива, получаем ошибку:
+]
 
 #kt-eval-append(```
 arr[3]
@@ -503,7 +563,9 @@ arr[3]
               ```,
 )
 
-Можно создавать и массивы более общих типов. Например,
+#kt-par[
+  Можно создавать и массивы более общих типов. Например,
+]
 
 #kt-eval(```
 arrayOf(1, "2", null)
@@ -513,7 +575,9 @@ arrayOf(1, "2", null)
 #kt-par[
   Как мы помним, у Int и String есть нечто общее --- они оба `Comparable<*>`. А у
   `Comparable<*>` и null общим типом будет, очевидно, `Comparable<*>?`.
+]
 
+#kt-par[
   Можно также задать тип вручную:
 ]
 
@@ -525,89 +589,125 @@ arrayOf<Number>(1, 2, 3)
 #kt-par[
   Number --- это обобщение Int, Long, Double и так далее. В `Array<`Number`>` мы
   можем положить любые числа. И когда мы что-то достаем из массива Number, мы не
-  можем точно быть уверены, какое конкретно это число. Мы можем выполнять общие
-  операции, определённые для всех чисел, например, привести к типу Double:
+  можем точно быть уверены, какое конкретно это число.
 ]
 
-#kt-eval(```
-val arr = arrayOf<Number>(1, 2, 3)
-arr[1].toDouble()
-```)
-#kt-res(`2.0`, KtDouble)
+#nobreak[
+  #kt-par[
+    Мы можем выполнять общие операции, определённые для всех чисел, например,
+    привести к типу Double:
+  ]
 
-Или проверить, какого оно типа:
+  #kt-eval(```
+    val arr = arrayOf<Number>(1, 2, 3)
+    arr[1].toDouble()
+    ```)
+  #kt-res(`2.0`, KtDouble)
+]
+#kt-par[
+  Или проверить, какого оно типа:
+]
+
 #kt-eval-append(```
 arr[1] is Long
 ```)
 #kt-res(`false`, KtBool)
+
 #kt-eval-append(```
 arr[1] is Int
 ```)
 #kt-res(`true`, KtBool)
-После этого, если мы уверены, привести явным образом
+
+#kt-par[
+  После этого, если мы уверены, привести явным образом
+]
+
 #kt-eval-append(```
 arr[1] as Int
 ```)
 #kt-res(`2`, KtInt)
-Стоит заметить, во-первых, что попытка каста к не тому типу обернётся ошибкой
-времени исполнения:
+
+#kt-par[
+  Стоит заметить, во-первых, что попытка каста к не тому типу обернётся ошибкой
+  времени исполнения:
+]
+
 #kt-eval-append(```
 arr[1] as Double
 ```)
 #kt-runt-err(
-  `
-        Exception in thread "main" java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Double (java.lang.Integer and java.lang.Double are in module java.base of loader 'bootstrap')
-          at TestsKts.main(Tests.kts:6)
-        `,
+  ```
+              Exception in thread "main" java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Double (java.lang.Integer and java.lang.Double are in module java.base of loader 'bootstrap')
+                  at TestsKts.main(Tests.kts:6)
+              ```,
 )
-А попытка проверить на is что-то совершенно точно бессмысленное --- ошибкой
-компиляции:
+
+#kt-par[
+  А попытка проверить на is что-то совершенно точно бессмысленное --- ошибкой
+  компиляции:
+]
+
 #kt-eval-append(```
 arr[1] is String
 ```)
 #kt-comp-err(`
 Incompatible types: String and Number
 `)
+
 #kt-par[
-  Так как компилятор считает правильным сообщить вам, что Number совершенно точно
-  никогда строкой не окажется.
+  ...Так как компилятор считает правильным сообщить вам, что Number совершенно
+  точно никогда строкой не окажется.
 ]
 
-Так, давайте вернёмся к массивам. Можно ли создавать массивы массивов? Сколько
-угодно:
+#kt-par[
+  Так, давайте вернёмся к массивам. Можно ли создавать массивы массивов? Сколько
+  угодно:
+]
+
 #kt-eval(```
 arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
 ```)
 #kt-res(`[[Ljava.lang.String;@3b9a45b3`, `Array<Array<String>>`)
-Будьте здоровы.
+
+#kt-par[ Будьте здоровы. ]
+
 #kt-eval(```
 arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl")).joinToString()
 ```)
-#kt-res(`"[Ljava.lang.String;@6d03e736, [Ljava.lang.String;@568db2f2"
-`, `String`)
-Будьте здоровы!
+#kt-res(
+  `"[Ljava.lang.String;@6d03e736, [Ljava.lang.String;@568db2f2"`,
+  KtString,
+)
+
+#kt-par[ Будьте здоровы! ]
 
 #comment[
-  Ладно, здесь, конечно, можно пытаться добиться адекватности:
   #kt-eval(```
-      val matrix = arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
-      matrix.joinToString(transform = Array<String>::joinToString)
-      ```)
-  #kt-res(`abc, def, ghi, jkl`, `String`)
-  Это ещё куда ни шло, но совершенно непонятно, где кончаются границы одного и
-  другого массива внутри.
-  #kt-eval(```
-      val matrix = arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
-      matrix.joinToString(", ", "[", "]") { it.joinToString (", ", "[", "]") }
-      ```)
-  #kt-res(`[[abc, def], [ghi, jkl]]`, `String`)
-  Есть, конечно, возможность заставить это работать. Но... вам не надоело?
-]
+                    val matrix = arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
+                    matrix.joinToString(transform = Array<String>::joinToString)
+                    ```)
+  #kt-res(`"abc, def, ghi, jkl"`, KtString)
 
-Есть несколько причин, почему в котлине непосредственно массивы используются
-крайне редко. Во-первых, вышеупомянутые проблемы со строковым представлением.
-Во-вторых, и это более важно, проблемы с безопасностью. Допустим, вы передали
-куда-то в функцию массив.
+  #kt-par[
+    Это ещё куда ни шло, но совершенно непонятно, где кончаются границы одного и
+    другого массива внутри.
+  ]
+] #comment[ #kt-eval(```
+                    val matrix = arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
+                    matrix.joinToString(", ", "[", "]") { it.joinToString (", ", "[", "]") }
+                    ```)
+  #kt-res(`"[[abc, def], [ghi, jkl]]"`, KtString)
+
+  #kt-par[
+    Есть, конечно, возможность заставить это работать. Но... вам не надоело?
+  ] ]
+
+#kt-par[
+  Есть несколько причин, почему в Котлине непосредственно массивы используются
+  крайне редко. Во-первых, вышеупомянутые проблемы со строковым представлением.
+  Во-вторых, и это более важно, проблемы с безопасностью. Допустим, вы передали
+  куда-то в функцию массив.
+]
 
 #kt-eval(```
 fun blackBox(data: Array<String>) {
@@ -618,84 +718,140 @@ val array = arrayOf("Some", "important", "data", "here")
 blackBox(array)
 array.joinToString()
 ```)
-#kt-res(`"Some, important, flowers, here"`, `String`)
+#kt-res(`"Some, important, flowers, here"`, KtString)
 
-#indent[Полундра! Данные скомпрометированы!]
+#indent[ Полундра! Данные скомпрометированы! ]
 
-Проблема в том, что массивы передаются исключительно по ссылке, копирования при
-передаче не происходит. А значит, отдавая кому-то на сторону данные, вы не
-можете быть уверены в их сохранности --- фактически вы отдаёте ссылку на область
-в памяти, где эти данные лежат.
+#kt-par[
+  Проблема в том, что массивы передаются исключительно по ссылке, копирования при
+  передаче не происходит. А значит, отдавая кому-то на сторону данные, вы не
+  можете быть уверены в их сохранности --- фактически вы отдаёте ссылку на область
+  в памяти, где эти данные лежат.
+]
 
-Чтобы этого избежать, существуют листы:
+#kt-par[
+  Чтобы этого избежать, существуют листы:
+]
+
 #kt-eval(```
 listOf("Some", "important", "data", "here")
 ```)
 #kt-res(`[Some, important, data, here]`, `List<String>`)
 
-И строковое представление нормальное, и записать туда что-то нам не дадут:
+#kt-par[
+  И строковое представление нормальное, и записать туда что-то нам не дадут:
+]
+
 #kt-eval(```
 val arr = listOf("Some", "important", "data", "here")
 arr[2] = "flowers"
 ```)
 #kt-comp-err(
   ```
-  Unresolved reference. None of the following candidates is applicable because of receiver type mismatch:
-  public inline operator fun kotlin.text.StringBuilder /* = java.lang.StringBuilder */.set(index: Int, value: Char): Unit defined in kotlin.text
-  No set method providing array access
-  ```,
+                Unresolved reference. None of the following candidates is applicable because of receiver type mismatch:
+                    public inline operator fun kotlin.text.StringBuilder /* = java.lang.StringBuilder */.set(index: Int, value: Char): Unit defined in kotlin.text
+                No set method providing array access
+                ```,
 )
-... очень много информации. Компилятор попытался найти метод с именем `set`,
-который отвечал бы за подобное присваивание, и не справился. Содержательная
-часть здесь `No set method providing array access` --- записывать сюда нам не
-дадут.
 
-Листы и массивы можно превращать друг в друга:
-#kt-eval(```
-val arr = arrayOf("Some", "important", "data", "here")
-arr.toList()
-```)
-#kt-res(`[Some, important, data, here]`, `List<String>`)
-#kt-eval(```
-val arr = listOf("Some", "important", "data", "here")
-arr.toTypedArray()
-```)
-#kt-res(`[Ljava.lang.String;@4fca772d`, `Array<String>`)
-И в том, и в другом случае действительно происходит копирование.
+#kt-par[
+  ... очень много информации. Компилятор попытался найти метод с именем `set`,
+  который отвечал бы за подобное присваивание, и не справился. Содержательная
+  часть здесь `No set method providing array access` --- записывать сюда нам не
+  дадут.
+]
 
-Кстати, говорилось про три варианта? Да, есть ещё `MutableList`. 
+#kt-par[
+  Листы и массивы можно превращать друг в друга:
+]
+
+#nobreak[
+  #kt-eval(```
+    val arr = arrayOf("Some", "important", "data", "here")
+  arr.toList()
+  ```)
+  #kt-res(`[Some, important, data, here]`, `List<String>`)
+]
+
+#nobreak[
+  #kt-eval(```
+    val arr = listOf("Some", "important", "data", "here")
+  arr.toTypedArray()
+  ```)
+  #kt-res(`[Ljava.lang.String;@4fca772d`, `Array<String>`)
+]
+
+#kt-par[
+  И в том, и в другом случае действительно происходит копирование.
+]
+
+#kt-par[
+  Кстати, говорилось про три варианта? Да, есть ещё `MutableList`.
+]
 
 #kt-eval(`
 mutableListOf(1, 2, 3)
 `)
 #kt-res(`[1, 2, 3]`, `MutableList<Int>`)
-В него, как и в массив, можно записывать, из него можно читать, но, что особенно важно, можно его расширять (массивы имеют постоянную длину!):
+
+#kt-par[
+  В него, как и в массив, можно записывать, из него можно читать, но, что особенно
+  важно, можно его расширять (массивы имеют постоянную длину!):
+]
+
 #kt-eval(```
 val arr = mutableListOf(1, 2, 3)
 arr.add(566)
 arr
 ```)
 #kt-res(`[1, 2, 3, 566]`, `MutableList<Int>`)
-Так вот, `MutableList<T>` в частности, является `List<T>` для любого типа `T`, так как `MutableList<T>` предоставляет те же методы: чтение, проверка длины, некоторые другие; но предоставляет и дополнительные --- изменение, расширение. Так что можно передать `MutableList<T>` в функцию, которая требует `List<T>` и (почти) не бояться, что его изменят. 
-#comment[
-Почти --- потому что некоторая возможность всё же есть; если вдруг это данные для запуска ядерных ракет и вы передаёте их в функцию --- лучше всё-таки сделайте копию.
+
+#kt-par[
+  Так вот, `MutableList<T>` в частности, является `List<T>` для любого типа `T`,
+  так как `MutableList<T>` предоставляет те же методы: чтение, проверка длины,
+  некоторые другие; но предоставляет и дополнительные --- изменение, расширение.
+  Так что можно передать `MutableList<T>` в функцию, которая требует `List<T>` и
+  (почти) не бояться, что его изменят.
 ]
-Ну, было бы желание сломать --- сломать получится. Например, до Java версии 1.8 включительно можно было провернуть очень интересный фокус, следите за руками:
+
+#comment[
+  Почти --- потому что некоторая возможность всё же есть; если вдруг это данные
+  для запуска ядерных ракет и вы передаёте их в функцию --- лучше всё-таки
+  сделайте копию.
+]
+
+#kt-par[
+  Ну, было бы желание сломать --- сломать получится. Например, до Java версии 1.8
+  включительно можно было провернуть очень интересный фокус, следите за руками:
+]
 
 #kt-eval(`1 as Any`)
 #kt-res(`1`, Any)
-Всё, казалось бы, логично, от того, что мы привели к более общему типу, значение-то не поменялось. Да?
 
-#kt(```
-val rnd = Random(56630239)
-val clazz = Class.forName("java.lang.Integer\$IntegerCache")
-val field = clazz.getDeclaredField("cache")
-field.isAccessible = true
-val cache = field.get(null) as Array<Int>
-for (i in 0 until cache.size) cache[i] = rnd.nextInt(cache.size)
-```)
+#kt-par[
+  Всё, казалось бы, логично, от того, что мы привели к более общему типу,
+  значение-то не поменялось. Да?
+]
 
-А вот после этого замечательного кода попробуем снова
+#indent[
+  #kt(```
+            val rnd = Random(56630239)
+            val clazz = Class.forName("java.lang.Integer\$IntegerCache")
+            val field = clazz.getDeclaredField("cache")
+            field.isAccessible = true
+            val cache = field.get(null) as Array<Int>
+            for (i in 0 until cache.size) cache[i] = rnd.nextInt(cache.size)
+            ```)
+]
+
+#kt-par[
+  А вот после этого замечательного кода попробуем снова
+]
+
 #kt-eval(`1 as Any`)
 #kt-res(`146`, Any)
-Э-э-э... Упс?
+
+#kt-par[
+  Э-э-э... Упс?
+]
+

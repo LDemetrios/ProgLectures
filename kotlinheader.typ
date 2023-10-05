@@ -15,7 +15,17 @@
 #let KtString = kttype("String")
 #let KtUnit = kttype("Unit")
 #let KtNothing = kttype("Nothing")
-
+#let KtBool7 = kttype("Boolean?")
+#let KtByte7 = kttype("Byte?")
+#let KtShort7 = kttype("Short?")
+#let KtInt7 = kttype("Int?")
+#let KtLong7 = kttype("Long?")
+#let KtChar7 = kttype("Char?")
+#let KtFloat7 = kttype("Float?")
+#let KtDouble7 = kttype("Double?")
+#let KtString7 = kttype("String?")
+#let KtUnit7 = kttype("Unit?")
+#let KtNothing7 = kttype("Nothing?")
 #let KtStar = kttype("*")
 
 #let Any = kttype("Any")
@@ -25,56 +35,6 @@
 #let Pair(f, s) = kttype("Pair<" + f.text + ", " + s.text + ">")
 #let Comparable(of) = kttype("Comparable<" + of.text + ">")
 
-//////////// Custom styles
-
-#let indent(body) = par(first-line-indent: 10pt, hanging-indent: 10pt, body)
-
-#let comment(body) = rect(
-  width: 100%,
-  fill: rgb("#a4ffbe"),
-  stroke: (paint: black, thickness: 1pt),
-  radius: 10pt,
-  inset: 7%,
-  outset: -3%,
-  [\ #body\ \ ],
-)
-
-#let strikeleft(body) = tablex(
-  columns: 3,
-  align: left + horizon,
-  auto-hlines: false,
-  auto-vlines: false,
-  [],
-  vlinex(start: 0, end: 1, stroke: black + 2pt),
-  [],
-  body,
-)
-
-//////////// Code sample blocks
-
-#let kt(code) = text(fill: rgb("#0033b3"),raw(code.text))
-
-#let kt-eval(code) = [
-  #indent(text(fill: rgb("#0033b3"),raw(code.text)))
-]
-#let kt-eval-noret(code) = [
-  #indent(text(fill: rgb("#0033b3"),raw(code.text)))
-]
-#let kt-eval-append(code) = [
-  #indent(text(fill: rgb("#0033b3"),raw(code.text)))
-]
-#let kt-res(code, type) = [
-  #indent(raw("=> : " + type.text + " = " + code.text))
-]
-#let kt-print(code) = [
-  #indent(text(fill: rgb("#017C01"), raw(code.text)))
-]
-#let kt-comp-err(err) = [
-  #indent(text(fill: rgb("#FA3232"), raw(err.text)))
-]
-#let kt-runt-err(err) = [
-  #indent(text(fill: rgb("#FA3232"), raw(err.text)))
-]
 
 //////////// Paragraph styling
 
@@ -104,8 +64,75 @@
   text(fill: rgb("#1750eb"), join-raw(lit))
 } else if (typ == KtBool) {
   text(fill: rgb("#0033b3"), join-raw(lit))
+} else if (typ == KtUnit) {
+  text(fill: rgb("#000000"), join-raw(lit))
 } else [
-  UNKNOWN LITERAL TYPE
+  #text(fill:rgb("#000000"), join-raw(lit))
+]
+
+
+//////////// Custom styles
+
+#let indent(body) = par(first-line-indent: 10pt, hanging-indent: 10pt, body)
+
+#let comment(body) = rect(
+  width: 100%,
+  fill: luma(230),
+  stroke: (paint: black, thickness: 1pt),
+  radius: 10pt,
+  inset: 7%,
+  outset: -3%,
+  [\ #body\ \ ],
+)
+
+#let strikeleft(body) = tablex(
+  columns: 3,
+  align: left + horizon,
+  auto-hlines: false,
+  auto-vlines: false,
+  [],
+  vlinex(start: 0, end: 1, stroke: black + 2pt),
+  [],
+  body,
+)
+
+#let nobreak(body) = block(breakable: false, body)
+
+//////////// Code sample blocks
+
+#let kt(code) = [
+  #show regex("\b(var|null|if|else|fun|val|do|while|object|class|interface|return|break|continue|throw|lateinit|as|is|in|for|true|false|data|companion|infix|operator|override|public|private|protected|inline|internal|constructor)\b") : (it) => text(weight:"bold" /*, fill:rgb(0, 127, 255)*/, it)
+  #show regex("\"([^\"]*|\\[\"\\ntrf$])\"") : (it) => text(fill:rgb("#017C01"), it)
+  #show regex("'([ -~]|\\[\\\"nrtf]|\\\\u[0-9a-fA-F]{4})'") : (it) => text(fill:rgb("#017C01"), it)
+  #show regex("-?[0-9]+(\.[0-9]+([eE][+-]?[0-9]+)?)?") : (it) => text(fill:rgb("#1750eb"), it)
+  #show regex("//[^\n]*") : (it) => text(fill:rgb("#7F7F7F"), it)
+  #show regex("(?ms)/\*([^\*]|\*[^/]|\n|\r)*\*/") : (it) => text(fill:rgb("#7F7F7F"), it)
+  #text(fill: rgb("#002583"), raw(code.text))
+]
+
+#let kt-eval(code) = [
+  #indent(kt(code))
+]
+#let kt-eval-noret(code) = [
+    #indent(kt(code))
+]
+#let kt-eval-append(code) = [
+   #indent(kt(code))
+]
+#let kt-eval-append-noret(code) = [
+   #indent(kt(code))
+]
+#let kt-res(code, typ) = [
+  #indent[`=> : `*#raw(typ.text)*` = `#kt-literal(code.text, typ)]
+]
+#let kt-print(code) = [
+  #indent(text(fill: rgb("#017C01"), raw(code.text)))
+]
+#let kt-comp-err(err) = [
+  #indent(text(fill: rgb("#FA3232"), raw(err.text)))
+]
+#let kt-runt-err(err) = [
+  #indent(text(fill: rgb("#FA3232"), raw(err.text)))
 ]
 
 #let kt-par(body) = [
@@ -153,7 +180,21 @@
   #show regex("\bthrow\b") : kt-keyword("throw")
   #show regex("\bnull\b") : kt-keyword("null")
   #show regex("\blateinit\b") : kt-keyword("lateinit")
-  //
+  #show regex("\bdata\b") : kt-keyword("data")
+  #show regex("\bcompanion\b") : kt-keyword("companion")
+  #show regex("\bthis\b") : kt-keyword("this")
+  #show regex("\binfix\b") : kt-keyword("infix")
+  #show regex("\boperator\b") : kt-keyword("operator")
+  #show regex("\boverride\b") : kt-keyword("override")
+  #show regex("\bpublic\b") : kt-keyword("public")
+  #show regex("\bprivate\b") : kt-keyword("private")
+  #show regex("\bprotected\b") : kt-keyword("protected")
+  #show regex("\binline\b") : kt-keyword("inline")
+  #show regex("\binternal\b") : kt-keyword("internal")
+  #show regex("\bconstructor\b") : kt-keyword("constructor")
+  #show regex("\bas\b") : kt-keyword("as")
+  #show regex("\bis\b") : kt-keyword("is")
+  //constructor
   // #show regex("[0-9]{2,}") : (num) => kt-literal(num.text)
   //
   #show regex("\bstdout\b") : join-raw("stdout")
@@ -162,3 +203,9 @@
   #body
 ]
 
+#let kt-paper-rule(body) = [
+  #set par(justify: true)
+  #show link: (it) => underline(text(fill:rgb("#0B0080"), it))
+// TODO : show rule for JVM, JS, Kotlin, Java, C++ icon
+  #body
+]
