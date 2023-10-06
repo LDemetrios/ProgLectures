@@ -141,12 +141,12 @@ if (1 + 2 < 4) {
   Теперь циклы. А для циклов сначала нужны переменные. Их есть:
 
   #kt-eval(```
-        var i = 0
-        while (i < 5) {
-            print(i)
-            i++
-        }
-        ```)
+          var i = 0
+          while (i < 5) {
+              print(i)
+              i++
+          }
+          ```)
   #kt-print(``` 01234 ```)
 ]
 
@@ -339,8 +339,8 @@ fun max(a: Int, b: Int): Int = if (a < b) b else a
   #kt-par[ А если типы возвращаемых данных разные? Ошибка? ]
 
   #kt-eval(```
-      if (1 < 2) 3 else "4"
-      ```)
+        if (1 < 2) 3 else "4"
+        ```)
   #kt-res(`3`, Comparable(KtStar))
 ]
 
@@ -388,15 +388,15 @@ if (1 < 2) 3 else Unit
 
 #strikeleft[
   #kt-eval(```
-              var s : String = "abc"
-            s = null
-            ```)
+                var s : String = "abc"
+              s = null
+              ```)
   #kt-comp-err(`Null can not be a value of a non-null type String`)
 
   #kt-eval(```
-              var s : String? = "abc"
-              s = null // OK
-              ```)
+                var s : String? = "abc"
+                s = null // OK
+                ```)
 ]
 
 #kt-par[
@@ -426,19 +426,19 @@ if (1 < 2) 3 else Unit
     ]
 
     #kt-eval(```
-                  val s : String? = "abacaba"
-                  s!!
-                  ```)
+                      val s : String? = "abacaba"
+                      s!!
+                      ```)
     #kt-res(`"abacaba"`, KtString)
 
     #kt-eval(```
-                  val s : String? = null
-                  s!!
-                  ```)
+                      val s : String? = null
+                      s!!
+                      ```)
     #kt-runt-err(```
-                    Exception in thread "main" java.lang.NullPointerException
-                        at test.TestKts.main(Test.kts:2)
-                    ```)
+                        Exception in thread "main" java.lang.NullPointerException
+                            at test.TestKts.main(Test.kts:2)
+                        ```)
   ]
 ]
 
@@ -449,15 +449,15 @@ if (1 < 2) 3 else Unit
   ]
 
   #kt-eval(```
-              val s : String? = "abacaba"
-              s?.substring(2, 6)
-              ```)
+                val s : String? = "abacaba"
+                s?.substring(2, 6)
+                ```)
   #kt-res(`"acab"`, KtString7)
 
   #kt-eval(```
-              val s : String? = null
-              s?.substring(2, 6)
-              ```)
+                val s : String? = null
+                s?.substring(2, 6)
+                ```)
   #kt-res(`null`, KtString7)
 ]
 
@@ -469,15 +469,15 @@ if (1 < 2) 3 else Unit
   ]
 
   #kt-eval(```
-              val s : String? = "abacaba"
-              s ?: "by default"
-              ```)
+                val s : String? = "abacaba"
+                s ?: "by default"
+                ```)
   #kt-res(`"abacaba"`, KtString7)
 
   #kt-eval(```
-                val s : String? = null
-                s ?: "by default"
-                ```)
+                  val s : String? = null
+                  s ?: "by default"
+                  ```)
   #kt-res(`"by default"`, KtString)
 ]
 
@@ -502,8 +502,8 @@ if (1 < 2) 3 else Unit
   ]
 
   #kt-eval(```
-      arrayOf("abc", "def", "ghi")
-      ```)
+        arrayOf("abc", "def", "ghi")
+        ```)
   #kt-res(`[Ljava.lang.String;@3b9a45b3`, `Array<String>`)
   #kt-par[
     Будьте здоровы, Вы, кажется, чихнули.
@@ -558,9 +558,9 @@ arr[3]
 ```)
 #kt-runt-err(
   ```
-            Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 3 out of bounds for length 3
-                at TestsKts.main(Tests.kts:6)
-              ```,
+              Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 3 out of bounds for length 3
+                  at TestsKts.main(Tests.kts:6)
+                ```,
 )
 
 #kt-par[
@@ -599,9 +599,9 @@ arrayOf<Number>(1, 2, 3)
   ]
 
   #kt-eval(```
-    val arr = arrayOf<Number>(1, 2, 3)
-    arr[1].toDouble()
-    ```)
+      val arr = arrayOf<Number>(1, 2, 3)
+      arr[1].toDouble()
+      ```)
   #kt-res(`2.0`, KtDouble)
 ]
 #kt-par[
@@ -637,9 +637,9 @@ arr[1] as Double
 ```)
 #kt-runt-err(
   ```
-              Exception in thread "main" java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Double (java.lang.Integer and java.lang.Double are in module java.base of loader 'bootstrap')
-                  at TestsKts.main(Tests.kts:6)
-              ```,
+                Exception in thread "main" java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Double (java.lang.Integer and java.lang.Double are in module java.base of loader 'bootstrap')
+                    at TestsKts.main(Tests.kts:6)
+                ```,
 )
 
 #kt-par[
@@ -683,9 +683,9 @@ arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl")).joinToString()
 
 #comment[
   #kt-eval(```
-                    val matrix = arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
-                    matrix.joinToString(transform = Array<String>::joinToString)
-                    ```)
+                      val matrix = arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
+                      matrix.joinToString(transform = Array<String>::joinToString)
+                      ```)
   #kt-res(`"abc, def, ghi, jkl"`, KtString)
 
   #kt-par[
@@ -693,9 +693,9 @@ arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl")).joinToString()
     другого массива внутри.
   ]
 ] #comment[ #kt-eval(```
-                    val matrix = arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
-                    matrix.joinToString(", ", "[", "]") { it.joinToString (", ", "[", "]") }
-                    ```)
+                      val matrix = arrayOf(arrayOf("abc", "def"), arrayOf("ghi", "jkl"))
+                      matrix.joinToString(", ", "[", "]") { it.joinToString (", ", "[", "]") }
+                      ```)
   #kt-res(`"[[abc, def], [ghi, jkl]]"`, KtString)
 
   #kt-par[
@@ -748,10 +748,10 @@ arr[2] = "flowers"
 ```)
 #kt-comp-err(
   ```
-                Unresolved reference. None of the following candidates is applicable because of receiver type mismatch:
-                    public inline operator fun kotlin.text.StringBuilder /* = java.lang.StringBuilder */.set(index: Int, value: Char): Unit defined in kotlin.text
-                No set method providing array access
-                ```,
+                  Unresolved reference. None of the following candidates is applicable because of receiver type mismatch:
+                      public inline operator fun kotlin.text.StringBuilder /* = java.lang.StringBuilder */.set(index: Int, value: Char): Unit defined in kotlin.text
+                  No set method providing array access
+                  ```,
 )
 
 #kt-par[
@@ -767,17 +767,17 @@ arr[2] = "flowers"
 
 #nobreak[
   #kt-eval(```
-    val arr = arrayOf("Some", "important", "data", "here")
-  arr.toList()
-  ```)
+      val arr = arrayOf("Some", "important", "data", "here")
+    arr.toList()
+    ```)
   #kt-res(`[Some, important, data, here]`, `List<String>`)
 ]
 
 #nobreak[
   #kt-eval(```
-    val arr = listOf("Some", "important", "data", "here")
-  arr.toTypedArray()
-  ```)
+      val arr = listOf("Some", "important", "data", "here")
+    arr.toTypedArray()
+    ```)
   #kt-res(`[Ljava.lang.String;@4fca772d`, `Array<String>`)
 ]
 
@@ -820,38 +820,41 @@ arr
   сделайте копию.
 ]
 
-#kt-par[
-  Ну, было бы желание сломать --- сломать получится. Например, до Java версии 1.8
-  включительно можно было провернуть очень интересный фокус, следите за руками:
+#comment[
+  #kt-par[
+    Ну, было бы желание сломать --- сломать получится. Например, до Java версии 1.8
+    включительно можно было провернуть очень интересный фокус, следите за руками:
+  ]
+
+  #kt-eval(`1 as Any`)
+  #kt-res(`1`, Any)
+
+  #kt-par[
+    Всё, казалось бы, логично, от того, что мы привели к более общему типу,
+    значение-то не поменялось. Да?
+  ]
+
 ]
+#comment[
+  #indent[
+    #kt(```
+                val rnd = Random(56630239)
+                val clazz = Class.forName("java.lang.Integer\$IntegerCache")
+                val field = clazz.getDeclaredField("cache")
+                field.isAccessible = true
+                val cache = field.get(null) as Array<Int>
+                for (i in 0 until cache.size) cache[i] = rnd.nextInt(cache.size)
+                ```)
+  ]
 
-#kt-eval(`1 as Any`)
-#kt-res(`1`, Any)
+  #kt-par[
+    А вот после этого замечательного кода попробуем снова
+  ]
 
-#kt-par[
-  Всё, казалось бы, логично, от того, что мы привели к более общему типу,
-  значение-то не поменялось. Да?
+  #kt-eval(`1 as Any`)
+  #kt-res(`146`, Any)
+
+  #kt-par[
+    Э-э-э... Упс?
+  ]
 ]
-
-#indent[
-  #kt(```
-            val rnd = Random(56630239)
-            val clazz = Class.forName("java.lang.Integer\$IntegerCache")
-            val field = clazz.getDeclaredField("cache")
-            field.isAccessible = true
-            val cache = field.get(null) as Array<Int>
-            for (i in 0 until cache.size) cache[i] = rnd.nextInt(cache.size)
-            ```)
-]
-
-#kt-par[
-  А вот после этого замечательного кода попробуем снова
-]
-
-#kt-eval(`1 as Any`)
-#kt-res(`146`, Any)
-
-#kt-par[
-  Э-э-э... Упс?
-]
-
