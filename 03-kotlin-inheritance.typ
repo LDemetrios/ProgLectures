@@ -183,7 +183,6 @@ fun fill(list: ArrayIntList, fromIndex: Int, toIndex: Int, value: Int) {
   #kt-par[ Окей, работает. Попробуем ]
 
   #kt-eval-append(```
-      fill(arr, 5, 30, 0)
       arr[2147000000 /*Don't remember*/] = 1
       arr
       ```)
