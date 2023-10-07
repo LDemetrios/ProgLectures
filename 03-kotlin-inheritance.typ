@@ -187,7 +187,6 @@ fun fill(list: ArrayIntList, fromIndex: Int, toIndex: Int, value: Int) {
       arr[2147000000 /*Don't remember*/] = 1
       arr
       ```)
-  #kt-res(`[1, 2, 3, 4, 5, <999995 empty slots>, 1]`, `ArrayIntList`)
 
   #kt-par[ Хотелось бы увидеть здесь ответ ]
   #kt-res(
