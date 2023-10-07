@@ -101,7 +101,7 @@
 //////////// Code sample blocks
 
 #let kt(code) = [
-  #show regex("\b(var|null|if|else|fun|val|do|while|object|class|interface|return|break|continue|throw|lateinit|as|is|in|for|true|false|data|companion|infix|operator|override|public|private|protected|inline|internal|constructor)\b") : (it) => text(weight:"bold" /*, fill:rgb(0, 127, 255)*/, it)
+  #show regex("\b(var|null|if|else|fun|val|do|while|object|class|interface|return|break|continue|throw|lateinit|as|is|in|for|true|false|data|companion|infix|operator|override|public|private|protected|inline|internal|constructor|import|abstract|open)\b") : (it) => text(weight:"bold" /*, fill:rgb(0, 127, 255)*/, it)
   #show regex("\"([^\"]*|\\[\"\\ntrf$])\"") : (it) => text(fill:rgb("#017C01"), it)
   #show regex("'([ -~]|\\[\\\"nrtf]|\\\\u[0-9a-fA-F]{4})'") : (it) => text(fill:rgb("#017C01"), it)
   #show regex("-?[0-9]+(\.[0-9]+([eE][+-]?[0-9]+)?)?") : (it) => text(fill:rgb("#1750eb"), it)
@@ -194,6 +194,9 @@
   #show regex("\bconstructor\b") : kt-keyword("constructor")
   #show regex("\bas\b") : kt-keyword("as")
   #show regex("\bis\b") : kt-keyword("is")
+  #show regex("\bimport\b") : kt-keyword("import")
+  #show regex("\babstract\b") : kt-keyword("abstract")
+  #show regex("\bopen\b") : kt-keyword("open")
   //constructor
   // #show regex("[0-9]{2,}") : (num) => kt-literal(num.text)
   //
