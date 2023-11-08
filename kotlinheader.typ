@@ -1,4 +1,18 @@
-#import "tablex.typ": tablex, rowspanx, colspanx, hlinex, vlinex
+#import "@preview/tablex:0.0.6": tablex, rowspanx, colspanx, hlinex, vlinex
+#import "@local/ldemetrios-commons:0.1.0" : * // https://github.com/LDemetrios/LDemetrios-Typst-Commons
+#import "@preview/cetz:0.1.2"
+
+//////////// Styling
+
+#let dev-mode = "dev-mode"
+#let rel-mode = "rel-mode"
+#let print-mode = "print-mode"
+#let mode = rel-mode
+#let code-color = if (mode == print-mode) { black } else if (mode == dev-mode) { white } else { rgb("#002583") }
+#let foreground = if (mode == print-mode) { black } else if (mode == dev-mode) {
+  white
+} else { rgb("#000000") }
+#let comment-back = if (mode == print-mode) { white } else if (mode == dev-mode) { black } else { luma(230) }
 
 //////////// Standard types
 
@@ -35,7 +49,6 @@
 #let Pair(f, s) = kttype("Pair<" + f.text + ", " + s.text + ">")
 #let Comparable(of) = kttype("Comparable<" + of.text + ">")
 
-
 //////////// Paragraph styling
 
 #let join-raw(code) = {
@@ -67,9 +80,8 @@
 } else if (typ == KtUnit) {
   text(fill: rgb("#000000"), join-raw(lit))
 } else [
-  #text(fill:rgb("#000000"), join-raw(lit))
+  #text(fill: foreground, join-raw(lit))
 ]
-
 
 //////////// Custom styles
 
@@ -77,7 +89,7 @@
 
 #let comment(body) = rect(
   width: 100%,
-  fill: luma(230),
+  fill: comment-back,
   stroke: (paint: black, thickness: 1pt),
   radius: 10pt,
   inset: 7%,
@@ -101,26 +113,28 @@
 //////////// Code sample blocks
 
 #let kt(code) = [
-  #show regex("\b(var|null|if|else|fun|val|do|while|object|class|interface|return|break|continue|throw|lateinit|as|is|in|for|true|false|data|companion|infix|operator|override|public|private|protected|inline|internal|constructor|import|abstract|open)\b") : (it) => text(weight:"bold" /*, fill:rgb(0, 127, 255)*/, it)
-  #show regex("\"([^\"]*|\\[\"\\ntrf$])\"") : (it) => text(fill:rgb("#017C01"), it)
-  #show regex("'([ -~]|\\[\\\"nrtf]|\\\\u[0-9a-fA-F]{4})'") : (it) => text(fill:rgb("#017C01"), it)
-  #show regex("-?[0-9]+(\.[0-9]+([eE][+-]?[0-9]+)?)?") : (it) => text(fill:rgb("#1750eb"), it)
-  #show regex("//[^\n]*") : (it) => text(fill:rgb("#7F7F7F"), it)
-  #show regex("(?ms)/\*([^\*]|\*[^/]|\n|\r)*\*/") : (it) => text(fill:rgb("#7F7F7F"), it)
-  #text(fill: rgb("#002583"), raw(code.text))
+  #show regex(
+    "\b(var|null|if|else|fun|val|do|while|object|class|interface|return|break|continue|throw|lateinit|as|is|in|for|true|false|data|companion|infix|operator|override|public|private|protected|inline|internal|constructor|import|abstract|open)\b",
+  ) : (it) => text(weight: "bold"/*, fill:rgb(0, 127, 255)*/, it)
+  #show regex("\"([^\"]*|\\[\"\\ntrf$])\"") : (it) => text(fill: rgb("#017C01"), it)
+  #show regex("'([ -~]|\\[\\\"nrtf]|\\\\u[0-9a-fA-F]{4})'") : (it) => text(fill: rgb("#017C01"), it)
+  #show regex("\b-?[0-9]+(\.[0-9]+([eE][+-]?[0-9]+)?)?\b") : (it) => text(fill: rgb("#1750eb"), it)
+  #show regex("//[^\n]*") : (it) => text(fill: rgb("#7F7F7F"), it)
+  #show regex("(?ms)/\*([^\*]|\*[^/]|\n|\r)*\*/") : (it) => text(fill: rgb("#7F7F7F"), it)
+  #text(fill: code-color, raw(code.text))
 ]
 
 #let kt-eval(code) = [
   #indent(kt(code))
 ]
 #let kt-eval-noret(code) = [
-    #indent(kt(code))
+  #indent(kt(code))
 ]
 #let kt-eval-append(code) = [
-   #indent(kt(code))
+  #indent(kt(code))
 ]
 #let kt-eval-append-noret(code) = [
-   #indent(kt(code))
+  #indent(kt(code))
 ]
 #let kt-res(code, typ) = [
   #indent[`=> : `*#raw(typ.text)*` = `#kt-literal(code.text, typ)]
@@ -160,6 +174,8 @@
   #show regex("\bUnit\b") : datatype("Unit")
   #show regex("\bNumber\?") : datatype("Number?")
   #show regex("\bNumber\b") : datatype("Number")
+  #show regex("\bBoolean\?\b") : datatype("Boolean?")
+  #show regex("\bBoolean\b") : datatype("Boolean")
   //
   #show regex("\bprint\b") : static-function("print")
   #show regex("\bprintln\b") : static-function("println")
@@ -208,7 +224,38 @@
 
 #let kt-paper-rule(body) = [
   #set par(justify: true)
-  #show link: (it) => underline(text(fill:rgb("#0B0080"), it))
-// TODO : show rule for JVM, JS, Kotlin, Java, C++ icon
+  //#show : dark-theme
+  #show link: (it) => underline(text(fill: rgb("#0B0080"), it))
+  // TODO : show rule for JVM, JS, Kotlin, Java, C++ icon
   #body
 ]
+
+#let pow(a, b) = if(b == 0) {1} else {calc.pow(a, b)}
+
+#let bezier-timed(coords, n, cn, t, c) = {
+  let sum = .0
+  for i in range(0, n+1) {
+    sum += cn.at(i) * pow(t, i) * pow(1 - t, n - i) * coords.at(i).at(c)
+  }
+  sum
+}
+
+#let bezier-curve(steps:100, coords, ..args) = {
+  let n = coords.len() - 1
+  let points = coords
+  let cn = (1,)
+  for k in range(1, n + 1) {
+      cn.push(cn.at(k - 1) * (1 - k + n) / k)
+  }
+  let step = 1.0 / steps
+  let prevX = points.at(0).at(0)
+  let prevY = points.at(0).at(1)
+  for i in range(steps) { 
+    let x = bezier-timed(points, n, cn, step*(i+1), 0)
+    let y = bezier-timed(points, n, cn, step*(i+1), 1)
+    cetz.draw.line((prevX, prevY), (x, y), ..args)
+    prevX = x
+    prevY = y
+  }
+}
+
