@@ -1,6 +1,10 @@
-#import "@preview/tablex:0.0.6": tablex, rowspanx, colspanx, hlinex, vlinex
 #import "@local/ldemetrios-commons:0.1.0" : * // https://github.com/LDemetrios/LDemetrios-Typst-Commons
-#import "@preview/cetz:0.1.2"
+
+//////////// Icons
+
+#let JVM = [#box[#pad(bottom:-0.2em)[#image(height: 1.2em, "JVM icon.png")]] *JV**M*]
+#let Kotlin = [ #box[#pad(bottom:-0.05em,right: -0.3em)[#image(height: 0.8em, "Kotlin.png")]] otlin]
+#let IEEE = [ #box[#pad(bottom:-0.3em,right: -0.3em)[#image(height: 1.2em, "IEEE.png")]] `I``E``E``E`]
 
 //////////// Styling
 
@@ -9,9 +13,9 @@
 #let print-mode = "print-mode"
 #let mode = rel-mode
 #let code-color = if (mode == print-mode) { black } else if (mode == dev-mode) { white } else { rgb("#002583") }
-#let foreground = if (mode == print-mode) { black } else if (mode == dev-mode) {
-  white
-} else { rgb("#000000") }
+#let foreground = if (mode == print-mode) { black } else if (mode == dev-mode) { white } else { black }
+#let background = if (mode == print-mode) { white } else if (mode == dev-mode) { black } else { white }
+
 #let comment-back = if (mode == print-mode) { white } else if (mode == dev-mode) { black } else { luma(230) }
 
 //////////// Standard types
@@ -219,6 +223,9 @@
   #show regex("\bstdout\b") : join-raw("stdout")
   #show regex("\bstderr\b") : join-raw("stderr")
   #show regex("\bstdin\b") : join-raw("stdin")
+  //#show "Kotlin" : Kotlin
+  //#show "JVM" : JVM
+  //#show "IEEE" : IEEE
   #body
 ]
 
@@ -229,33 +236,3 @@
   // TODO : show rule for JVM, JS, Kotlin, Java, C++ icon
   #body
 ]
-
-#let pow(a, b) = if(b == 0) {1} else {calc.pow(a, b)}
-
-#let bezier-timed(coords, n, cn, t, c) = {
-  let sum = .0
-  for i in range(0, n+1) {
-    sum += cn.at(i) * pow(t, i) * pow(1 - t, n - i) * coords.at(i).at(c)
-  }
-  sum
-}
-
-#let bezier-curve(steps:100, coords, ..args) = {
-  let n = coords.len() - 1
-  let points = coords
-  let cn = (1,)
-  for k in range(1, n + 1) {
-      cn.push(cn.at(k - 1) * (1 - k + n) / k)
-  }
-  let step = 1.0 / steps
-  let prevX = points.at(0).at(0)
-  let prevY = points.at(0).at(1)
-  for i in range(steps) { 
-    let x = bezier-timed(points, n, cn, step*(i+1), 0)
-    let y = bezier-timed(points, n, cn, step*(i+1), 1)
-    cetz.draw.line((prevX, prevY), (x, y), ..args)
-    prevX = x
-    prevY = y
-  }
-}
-
